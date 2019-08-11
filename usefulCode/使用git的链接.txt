@@ -1,0 +1,5 @@
+1.利用git上传本地文件
+https://blog.csdn.net/sinat_20177327/article/details/76062030
+
+2.将项目克隆到本地
+https://blog.csdn.net/xuezhangjun0121/article/details/80887711
