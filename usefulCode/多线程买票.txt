@@ -1,0 +1,66 @@
+20人买票，两个窗口，两人同时买票，任意一人买好票走后，等待的18人又会有一人占用窗口买票
+
+拆解：20个线程，2个窗口就是资源
+
+实际含义：怎样控制同一时间并发数为2
+Semaphore 信号量（控制并发线程数）
+Semaphore semaphore=new Semaphore(2);
+
+package com.current;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+
+public class SemaphoreDemo {
+	
+	/**
+	 * 执行任务类，获取信号量，释放信号量
+	 * 控制资源的并发访问数
+	 * @author Administrator
+	 *
+	 */
+	class SemaPhoreRunnable implements Runnable{
+		private Semaphore semaphore;//信号量
+		int user;//记录第几个用户
+		public SemaPhoreRunnable(Semaphore semaphore,int user) {
+			this.semaphore=semaphore;	
+			this.user=user;
+		}
+		@Override
+		public void run() {
+			//获取信号量许可
+			try {
+				semaphore.acquire();
+				System.out.println("用户【"+user+"】进入窗口，准备买票...");
+				Thread.sleep((long)Math.random()*10000);
+				System.out.println("用户【"+user+"】买票成功，即将离开...");
+				Thread.sleep((long)Math.random()*10000);
+				System.out.println("用户【"+user+"】离开窗口");
+				semaphore.release();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	public void execute() {
+		//定义窗口个数
+		Semaphore semaphore=new Semaphore(2);
+		//线程池
+		ExecutorService threadPool=Executors.newCachedThreadPool();
+		//模拟20个用户
+		for(int i=0;i<21;i++) {
+			//执行买票,从第一个用户开始
+			threadPool.execute(new SemaPhoreRunnable(semaphore,(i+1)));
+		}
+		threadPool.shutdown();	
+	}	
+	
+	
+	public static void main(String[] args) {
+		SemaphoreDemo sd=new SemaphoreDemo();
+		sd.execute();
+	}
+}
+

@@ -1,0 +1,42 @@
+@RequestMapping("change_avatar")
+	public JsonResult<String> changeAvatar(
+			@RequestParam("file") MultipartFile file,
+			HttpServletRequest request,HttpSession session
+			){
+		//生成文件名
+		System.err.println("有人调用你就眨眨眼");
+		String oFilename=file.getOriginalFilename();
+		Integer index=oFilename.lastIndexOf(".");
+		String suffix="";
+		if(index!=-1) {
+			suffix=oFilename.substring(index);
+		}
+		String filename=UUID.randomUUID().toString()+suffix;
+		
+		//生成目标路径
+		String filePath=request.getServletContext().getRealPath("upload");
+		File parent=new File(filePath);
+		if(!parent.exists()) {
+			parent.mkdir();//创建对应的目录
+			
+		}
+		File dest=new File(parent,filename);
+		//将用户上传的头像保存在服务器上
+		try {
+			file.transferTo(dest);
+		}catch(IllegalStateException e) {
+			e.printStackTrace();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		//将头像在服务器的路径保存在数据库中
+		
+		String avatar="/upload/"+filename;
+		Integer uid=getUidFromSession(request.getSession());
+		String username=getUsernameFromSession(request.getSession());
+		service.changeAvatar(uid, avatar, username);
+		JsonResult<String> jr=new JsonResult();
+		jr.setData(avatar);
+		jr.setState(0);
+		return jr;
+	}

@@ -1,0 +1,38 @@
+1.在桌面新建文件夹
+2.进入文件夹，右键git bash
+3.输入两条初始化命令
+  git config --global user.name “RuanZhiPen”
+  git config --global user.email “1162722080@qq.com"
+4.初始化新的Git仓库
+   1.在该文件夹中创建新的文件夹
+     mkdir testGit
+   2.在文件内初始化仓库
+     cd testGit
+     git init
+5.向仓库添加文件
+  1.先创建文件 touch a.text（工作区）
+	git status,查看当前状态
+  2.把文件添加到暂存区
+	git add a.text 
+  3.再从暂存区添加到仓库
+	git commit -m 'add a.text'//后面引号的内容是描述，可以是中文
+6.vim a.text,编辑文件
+
+7.pwd当前位置
+8.删除文件 
+	rm -rf a.text
+9.从git中删除 
+	git rm a.text
+
+管理远程仓库
+1.将本地仓库的代码，同步到git远程仓库中
+	git push
+	在把文件添加到本地仓库后使用
+2.Git克隆操作
+	目的:将远程仓库（github对应的项目)复制到本地
+	git clone 仓库地址，（仓库地址来自github下的clone or download）
+	
+
+3.先把github远程的代码pork到本地，修改后再同步到远程仓库中
+4.提交到远程仓库 git push
+	体检哦啊之前
